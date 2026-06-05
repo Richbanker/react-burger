@@ -1,6 +1,9 @@
 ﻿import { Counter, CurrencyIcon, Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 
+import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
+import { Modal } from '@components/modal/modal';
+
 import type { TIngredient } from '@utils/types';
 
 import styles from './burger-ingredients.module.css';
@@ -11,16 +14,24 @@ type TBurgerIngredientsProps = {
 
 type TIngredientCardProps = {
   ingredient: TIngredient;
+  onClick: (ingredient: TIngredient) => void;
 };
 
 type TIngredientType = 'bun' | 'sauce' | 'main';
 
-const IngredientCard = ({ ingredient }: TIngredientCardProps): React.JSX.Element => {
+const IngredientCard = ({
+  ingredient,
+  onClick,
+}: TIngredientCardProps): React.JSX.Element => {
   const count = ingredient.type === 'bun' ? 2 : 1;
 
   return (
     <li className={styles.card}>
-      <article className={styles.card_content}>
+      <button
+        className={styles.card_button}
+        type="button"
+        onClick={() => onClick(ingredient)}
+      >
         <Counter count={count} size="default" extraClass={styles.counter} />
         <img className={styles.image} src={ingredient.image} alt={ingredient.name} />
         <p className={`${styles.price} text text_type_digits-default mt-1 mb-1`}>
@@ -30,7 +41,7 @@ const IngredientCard = ({ ingredient }: TIngredientCardProps): React.JSX.Element
         <h3 className={`${styles.name} text text_type_main-default`}>
           {ingredient.name}
         </h3>
-      </article>
+      </button>
     </li>
   );
 };
@@ -39,6 +50,7 @@ export const BurgerIngredients = ({
   ingredients,
 }: TBurgerIngredientsProps): React.JSX.Element => {
   const [currentTab, setCurrentTab] = useState<TIngredientType>('bun');
+  const [selectedIngredient, setSelectedIngredient] = useState<TIngredient | null>(null);
 
   const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
   const sauces = ingredients.filter((ingredient) => ingredient.type === 'sauce');
@@ -48,9 +60,21 @@ export const BurgerIngredients = ({
     setCurrentTab(value as TIngredientType);
   };
 
+  const handleIngredientClick = (ingredient: TIngredient): void => {
+    setSelectedIngredient(ingredient);
+  };
+
+  const handleCloseModal = (): void => {
+    setSelectedIngredient(null);
+  };
+
   const renderIngredients = (items: TIngredient[]): React.JSX.Element[] =>
     items.map((ingredient) => (
-      <IngredientCard key={ingredient._id} ingredient={ingredient} />
+      <IngredientCard
+        key={ingredient._id}
+        ingredient={ingredient}
+        onClick={handleIngredientClick}
+      />
     ));
 
   return (
@@ -83,6 +107,12 @@ export const BurgerIngredients = ({
           <ul className={styles.grid}>{renderIngredients(mains)}</ul>
         </section>
       </section>
+
+      {selectedIngredient && (
+        <Modal title="Детали ингредиента" onClose={handleCloseModal}>
+          <IngredientDetails ingredient={selectedIngredient} />
+        </Modal>
+      )}
     </section>
   );
 };

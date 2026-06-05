@@ -4,6 +4,10 @@
   CurrencyIcon,
   DragIcon,
 } from '@krgaa/react-developer-burger-ui-components';
+import { useState } from 'react';
+
+import { Modal } from '@components/modal/modal';
+import { OrderDetails } from '@components/order-details/order-details';
 
 import type { TIngredient } from '@utils/types';
 
@@ -16,6 +20,8 @@ type TBurgerConstructorProps = {
 export const BurgerConstructor = ({
   ingredients,
 }: TBurgerConstructorProps): React.JSX.Element => {
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+
   const bun = ingredients.find((ingredient) => ingredient.type === 'bun');
   const burgerConstructorItems = ingredients
     .filter((ingredient) => ingredient.type !== 'bun')
@@ -24,6 +30,14 @@ export const BurgerConstructor = ({
   const totalPrice =
     burgerConstructorItems.reduce((sum, ingredient) => sum + ingredient.price, 0) +
     (bun ? bun.price * 2 : 0);
+
+  const handleOpenOrderModal = (): void => {
+    setIsOrderModalOpen(true);
+  };
+
+  const handleCloseOrderModal = (): void => {
+    setIsOrderModalOpen(false);
+  };
 
   return (
     <section className={`${styles.burger_constructor} pt-25`}>
@@ -69,10 +83,21 @@ export const BurgerConstructor = ({
           {totalPrice}
           <CurrencyIcon type="primary" />
         </p>
-        <Button htmlType="button" type="primary" size="large">
+        <Button
+          htmlType="button"
+          type="primary"
+          size="large"
+          onClick={handleOpenOrderModal}
+        >
           Оформить заказ
         </Button>
       </div>
+
+      {isOrderModalOpen && (
+        <Modal onClose={handleCloseOrderModal}>
+          <OrderDetails />
+        </Modal>
+      )}
     </section>
   );
 };
