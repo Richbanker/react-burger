@@ -36,8 +36,7 @@ export const App = (): React.JSX.Element => {
         }
 
         setIngredients(result.data);
-      } catch (error) {
-        console.error(error);
+      } catch {
         setHasError(true);
       } finally {
         setIsLoading(false);
