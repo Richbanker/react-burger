@@ -1,4 +1,8 @@
-import { Tab } from '@krgaa/react-developer-burger-ui-components';
+﻿import { Counter, CurrencyIcon, Tab } from '@krgaa/react-developer-burger-ui-components';
+import { useState } from 'react';
+
+import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
+import { Modal } from '@components/modal/modal';
 
 import type { TIngredient } from '@utils/types';
 
@@ -8,44 +12,107 @@ type TBurgerIngredientsProps = {
   ingredients: TIngredient[];
 };
 
+type TIngredientCardProps = {
+  ingredient: TIngredient;
+  onClick: (ingredient: TIngredient) => void;
+};
+
+type TIngredientType = 'bun' | 'sauce' | 'main';
+
+const IngredientCard = ({
+  ingredient,
+  onClick,
+}: TIngredientCardProps): React.JSX.Element => {
+  const count = ingredient.type === 'bun' ? 2 : 1;
+
+  return (
+    <li className={styles.card}>
+      <button
+        className={styles.card_button}
+        type="button"
+        onClick={() => onClick(ingredient)}
+      >
+        <Counter count={count} size="default" extraClass={styles.counter} />
+        <img className={styles.image} src={ingredient.image} alt={ingredient.name} />
+        <p className={`${styles.price} text text_type_digits-default mt-1 mb-1`}>
+          {ingredient.price}
+          <CurrencyIcon type="primary" />
+        </p>
+        <h3 className={`${styles.name} text text_type_main-default`}>
+          {ingredient.name}
+        </h3>
+      </button>
+    </li>
+  );
+};
+
 export const BurgerIngredients = ({
   ingredients,
 }: TBurgerIngredientsProps): React.JSX.Element => {
-  console.log(ingredients);
+  const [currentTab, setCurrentTab] = useState<TIngredientType>('bun');
+  const [selectedIngredient, setSelectedIngredient] = useState<TIngredient | null>(null);
+
+  const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
+  const sauces = ingredients.filter((ingredient) => ingredient.type === 'sauce');
+  const mains = ingredients.filter((ingredient) => ingredient.type === 'main');
+
+  const handleTabClick = (value: string): void => {
+    setCurrentTab(value as TIngredientType);
+  };
+
+  const handleIngredientClick = (ingredient: TIngredient): void => {
+    setSelectedIngredient(ingredient);
+  };
+
+  const handleCloseModal = (): void => {
+    setSelectedIngredient(null);
+  };
+
+  const renderIngredients = (items: TIngredient[]): React.JSX.Element[] =>
+    items.map((ingredient) => (
+      <IngredientCard
+        key={ingredient._id}
+        ingredient={ingredient}
+        onClick={handleIngredientClick}
+      />
+    ));
 
   return (
     <section className={styles.burger_ingredients}>
-      <nav>
-        <ul className={styles.menu}>
-          <Tab
-            value="bun"
-            active={true}
-            onClick={() => {
-              /* TODO */
-            }}
-          >
-            Булки
-          </Tab>
-          <Tab
-            value="main"
-            active={false}
-            onClick={() => {
-              /* TODO */
-            }}
-          >
-            Начинки
-          </Tab>
-          <Tab
-            value="sauce"
-            active={false}
-            onClick={() => {
-              /* TODO */
-            }}
-          >
-            Соусы
-          </Tab>
-        </ul>
+      <nav className={styles.tabs}>
+        <Tab value="bun" active={currentTab === 'bun'} onClick={handleTabClick}>
+          Булки
+        </Tab>
+        <Tab value="sauce" active={currentTab === 'sauce'} onClick={handleTabClick}>
+          Соусы
+        </Tab>
+        <Tab value="main" active={currentTab === 'main'} onClick={handleTabClick}>
+          Начинки
+        </Tab>
       </nav>
+
+      <section className={`${styles.ingredients_list} custom-scroll`}>
+        <section>
+          <h2 className="text text_type_main-medium mt-10 mb-6">Булки</h2>
+          <ul className={styles.grid}>{renderIngredients(buns)}</ul>
+        </section>
+
+        <section>
+          <h2 className="text text_type_main-medium mt-10 mb-6">Соусы</h2>
+          <ul className={styles.grid}>{renderIngredients(sauces)}</ul>
+        </section>
+
+        <section>
+          <h2 className="text text_type_main-medium mt-10 mb-6">Начинки</h2>
+          <ul className={styles.grid}>{renderIngredients(mains)}</ul>
+        </section>
+      </section>
+
+      {selectedIngredient && (
+        <Modal title="Детали ингредиента" onClose={handleCloseModal}>
+          <IngredientDetails ingredient={selectedIngredient} />
+        </Modal>
+      )}
     </section>
   );
 };
