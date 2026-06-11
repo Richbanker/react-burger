@@ -1,9 +1,12 @@
 ﻿import { Counter, CurrencyIcon, Tab } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { useDrag } from 'react-dnd';
 
 import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
 import { Modal } from '@components/modal/modal';
+import { DND_TYPES } from '@utils/constants';
 
+import { selectConstructorIngredientCounts } from '../../services/burger-constructor/burger-constructor-slice';
 import {
   clearCurrentIngredient,
   selectCurrentIngredient,
@@ -21,6 +24,7 @@ type TBurgerIngredientsProps = {
 
 type TIngredientCardProps = {
   ingredient: TIngredient;
+  count: number;
   onClick: (ingredient: TIngredient) => void;
 };
 
@@ -28,18 +32,37 @@ type TIngredientType = 'bun' | 'sauce' | 'main';
 
 const IngredientCard = ({
   ingredient,
+  count,
   onClick,
 }: TIngredientCardProps): React.JSX.Element => {
-  const count = ingredient.type === 'bun' ? 2 : 1;
+  const cardRef = useRef<HTMLLIElement>(null);
+
+  const [{ isDragging }, dragRef] = useDrag<TIngredient, void, { isDragging: boolean }>(
+    () => ({
+      type: DND_TYPES.ingredient,
+      item: ingredient,
+      collect: (monitor): { isDragging: boolean } => ({
+        isDragging: monitor.isDragging(),
+      }),
+    }),
+    [ingredient]
+  );
+
+  dragRef(cardRef);
 
   return (
-    <li className={styles.card}>
+    <li
+      ref={cardRef}
+      className={`${styles.card} ${isDragging ? styles.card_dragging : ''}`}
+    >
       <button
         className={styles.card_button}
         type="button"
         onClick={() => onClick(ingredient)}
       >
-        <Counter count={count} size="default" extraClass={styles.counter} />
+        {count > 0 && (
+          <Counter count={count} size="default" extraClass={styles.counter} />
+        )}
         <img className={styles.image} src={ingredient.image} alt={ingredient.name} />
         <p className={`${styles.price} text text_type_digits-default mt-1 mb-1`}>
           {ingredient.price}
@@ -58,6 +81,7 @@ export const BurgerIngredients = ({
 }: TBurgerIngredientsProps): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const selectedIngredient = useAppSelector(selectCurrentIngredient);
+  const ingredientCounts = useAppSelector(selectConstructorIngredientCounts);
   const [currentTab, setCurrentTab] = useState<TIngredientType>('bun');
 
   const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
@@ -81,6 +105,7 @@ export const BurgerIngredients = ({
       <IngredientCard
         key={ingredient._id}
         ingredient={ingredient}
+        count={ingredientCounts[ingredient._id] ?? 0}
         onClick={handleIngredientClick}
       />
     ));

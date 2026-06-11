@@ -48,7 +48,7 @@ export const App = (): React.JSX.Element => {
       </h1>
       <main className={`${styles.main} pl-5 pr-5`}>
         <BurgerIngredients ingredients={ingredients} />
-        <BurgerConstructor ingredients={ingredients} />
+        <BurgerConstructor />
       </main>
     </div>
   );

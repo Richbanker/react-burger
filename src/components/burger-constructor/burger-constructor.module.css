@@ -43,3 +43,17 @@
   align-items: center;
   gap: 8px;
 }
+
+.placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80px;
+  border: 1px dashed var(--text-inactive-color);
+  border-radius: 40px;
+}
+
+.placeholder_active {
+  border-color: var(--colors-interface-accent);
+  box-shadow: 0 0 12px var(--colors-interface-accent);
+}

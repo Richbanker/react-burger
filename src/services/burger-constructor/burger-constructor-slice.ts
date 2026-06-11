@@ -7,6 +7,11 @@ export type TConstructorIngredient = TIngredient & {
   constructorId: string;
 };
 
+type TMoveConstructorIngredientPayload = {
+  fromIndex: number;
+  toIndex: number;
+};
+
 type TBurgerConstructorState = {
   bun: TIngredient | null;
   ingredients: TConstructorIngredient[];
@@ -44,6 +49,18 @@ export const burgerConstructorSlice = createSlice({
       );
     },
 
+    moveConstructorIngredient: (
+      state,
+      action: PayloadAction<TMoveConstructorIngredientPayload>
+    ) => {
+      const { fromIndex, toIndex } = action.payload;
+      const [movedIngredient] = state.ingredients.splice(fromIndex, 1);
+
+      if (movedIngredient) {
+        state.ingredients.splice(toIndex, 0, movedIngredient);
+      }
+    },
+
     clearConstructor: (state) => {
       state.bun = null;
       state.ingredients = [];
@@ -58,6 +75,7 @@ export const burgerConstructorSlice = createSlice({
 export const {
   addConstructorIngredient,
   removeConstructorIngredient,
+  moveConstructorIngredient,
   clearConstructor,
 } = burgerConstructorSlice.actions;
 
@@ -74,5 +92,22 @@ export const selectConstructorTotalPrice = createSelector(
     );
 
     return bunPrice + ingredientsPrice;
+  }
+);
+
+export const selectConstructorIngredientCounts = createSelector(
+  [selectConstructorBun, selectConstructorIngredients],
+  (bun, ingredients) => {
+    const counts: Record<string, number> = {};
+
+    if (bun) {
+      counts[bun._id] = 2;
+    }
+
+    ingredients.forEach((ingredient) => {
+      counts[ingredient._id] = (counts[ingredient._id] ?? 0) + 1;
+    });
+
+    return counts;
   }
 );

@@ -66,3 +66,7 @@
 .name {
   min-height: 48px;
 }
+
+.card_dragging {
+  opacity: 0.4;
+}
