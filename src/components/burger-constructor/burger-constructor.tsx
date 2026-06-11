@@ -75,7 +75,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
           } ml-8 mr-4`}
         >
           <p className="text text_type_main-default text_color_inactive">
-            еретащите булку
+            Перетащите булку
           </p>
         </div>
       )}
@@ -102,7 +102,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
             }`}
           >
             <p className="text text_type_main-default text_color_inactive">
-              еретащите начинку или соус
+              Перетащите начинку или соус
             </p>
           </li>
         )}
@@ -125,7 +125,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
           } ml-8 mr-4`}
         >
           <p className="text text_type_main-default text_color_inactive">
-            еретащите булку
+            Перетащите булку
           </p>
         </div>
       )}
@@ -135,15 +135,18 @@ export const BurgerConstructor = (): React.JSX.Element => {
           {totalPrice}
           <CurrencyIcon type="primary" />
         </p>
-        <Button
-          htmlType="button"
-          type="primary"
-          size="large"
-          disabled={!bun || burgerConstructorItems.length === 0}
-          onClick={handleOpenOrderModal}
-        >
-          формить заказ
-        </Button>
+
+        <div>
+          <Button
+            htmlType="button"
+            type="primary"
+            size="large"
+            disabled={!bun || burgerConstructorItems.length === 0}
+            onClick={handleOpenOrderModal}
+          >
+            Оформить заказ
+          </Button>
+        </div>
       </div>
 
       {isOrderModalOpen && (

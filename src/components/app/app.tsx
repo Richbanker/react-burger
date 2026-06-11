@@ -34,7 +34,7 @@ export const App = (): React.JSX.Element => {
       <div className={styles.app}>
         <AppHeader />
         <p className="text text_type_main-medium mt-10">
-          роизошла ошибка при загрузке ингредиентов
+          Произошла ошибка при загрузке ингредиентов
         </p>
       </div>
     );

@@ -6,11 +6,15 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
-    checker({
-      typescript: true,
-    }),
+    ...(mode === 'test'
+      ? []
+      : [
+          checker({
+            typescript: true,
+          }),
+        ]),
     react(),
     readableClassnames(),
     sassDts({
@@ -21,11 +25,13 @@ export default defineConfig({
   ],
   base: '',
   test: {
+    exclude: ['e2e/**', 'node_modules/**', 'dist/**'],
     globals: true,
     environment: 'jsdom',
+    passWithNoTests: true,
     setupFiles: ['./vitest-setup.ts'],
   },
   server: {
-    open: true,
+    open: mode !== 'test',
   },
-});
+}));

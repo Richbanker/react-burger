@@ -113,20 +113,26 @@ export const BurgerIngredients = ({
   return (
     <section className={styles.burger_ingredients}>
       <nav className={styles.tabs}>
-        <Tab value="bun" active={currentTab === 'bun'} onClick={handleTabClick}>
-          улки
-        </Tab>
-        <Tab value="sauce" active={currentTab === 'sauce'} onClick={handleTabClick}>
-          Соусы
-        </Tab>
-        <Tab value="main" active={currentTab === 'main'} onClick={handleTabClick}>
-          ачинки
-        </Tab>
+        <div>
+          <Tab value="bun" active={currentTab === 'bun'} onClick={handleTabClick}>
+            Булки
+          </Tab>
+        </div>
+        <div>
+          <Tab value="sauce" active={currentTab === 'sauce'} onClick={handleTabClick}>
+            Соусы
+          </Tab>
+        </div>
+        <div>
+          <Tab value="main" active={currentTab === 'main'} onClick={handleTabClick}>
+            Начинки
+          </Tab>
+        </div>
       </nav>
 
       <section className={`${styles.ingredients_list} custom-scroll`}>
         <section>
-          <h2 className="text text_type_main-medium mt-10 mb-6">улки</h2>
+          <h2 className="text text_type_main-medium mt-10 mb-6">Булки</h2>
           <ul className={styles.grid}>{renderIngredients(buns)}</ul>
         </section>
 
@@ -136,13 +142,13 @@ export const BurgerIngredients = ({
         </section>
 
         <section>
-          <h2 className="text text_type_main-medium mt-10 mb-6">ачинки</h2>
+          <h2 className="text text_type_main-medium mt-10 mb-6">Начинки</h2>
           <ul className={styles.grid}>{renderIngredients(mains)}</ul>
         </section>
       </section>
 
       {selectedIngredient && (
-        <Modal title="етали ингредиента" onClose={handleCloseModal}>
+        <Modal title="Детали ингредиента" onClose={handleCloseModal}>
           <IngredientDetails ingredient={selectedIngredient} />
         </Modal>
       )}

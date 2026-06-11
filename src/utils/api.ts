@@ -12,7 +12,7 @@ const checkResponse = async <T>(response: Response): Promise<T> => {
     return response.json() as Promise<T>;
   }
 
-  return Promise.reject(new Error(`шибка: ${response.status}`));
+  return Promise.reject(new Error(`Ошибка: ${response.status}`));
 };
 
 export const getIngredientsApi = async (): Promise<TIngredient[]> => {

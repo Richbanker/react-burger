@@ -1,6 +1,4 @@
-.burger_ingredients {
-  display: flex;
-  flex-direction: column;
+﻿.burger_ingredients {
   width: 600px;
   max-width: 600px;
   color: var(--text-primary-color);
@@ -8,19 +6,38 @@
 
 .tabs {
   display: flex;
+  box-sizing: border-box;
+  padding-left: 12px;
+  overflow: visible;
+}
+
+.tabs > div {
+  width: 100%;
+  overflow: visible;
+}
+
+.tabs button {
+  overflow: visible;
 }
 
 .ingredients_list {
   max-height: calc(100vh - 284px);
+  padding-left: 16px;
   overflow: hidden auto;
+}
+
+.ingredients_list h2 {
+  box-sizing: border-box;
+  padding-left: 8px;
+  overflow: visible;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 272px);
+  grid-template-columns: repeat(2, 1fr);
   gap: 32px 24px;
   margin: 0;
-  padding: 0 16px;
+  padding: 0 16px 0 0;
   list-style-type: none;
 }
 
@@ -29,18 +46,21 @@
 }
 
 .card_button {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-sizing: border-box;
+  width: 100%;
   min-height: 208px;
-  padding: 0;
+  padding: 0 8px;
   color: inherit;
-  font: inherit;
-  text-align: center;
   background: transparent;
-  border: none;
+  border: 0;
   cursor: pointer;
+}
+
+.card_dragging {
+  opacity: 0.4;
 }
 
 .counter {
@@ -50,7 +70,6 @@
 }
 
 .image {
-  display: block;
   width: 240px;
   height: 120px;
   object-fit: contain;
@@ -58,15 +77,12 @@
 
 .price {
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 8px;
 }
 
 .name {
   min-height: 48px;
-}
-
-.card_dragging {
-  opacity: 0.4;
+  margin: 0;
+  text-align: center;
 }

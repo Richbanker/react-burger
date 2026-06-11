@@ -1,4 +1,4 @@
-.burger_constructor {
+﻿.burger_constructor {
   display: flex;
   flex-direction: column;
   width: 600px;
@@ -38,6 +38,11 @@
   gap: 40px;
 }
 
+.order button {
+  min-width: 176px;
+  overflow: visible;
+}
+
 .price {
   display: flex;
   align-items: center;
@@ -48,9 +53,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
+  width: calc(100% - 48px);
   min-height: 80px;
+  padding: 0 32px;
+  overflow: visible;
+  text-align: center;
   border: 1px dashed var(--text-inactive-color);
   border-radius: 40px;
+}
+
+.placeholder p {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding-left: 12px;
+  overflow: visible;
+  white-space: nowrap;
 }
 
 .placeholder_active {

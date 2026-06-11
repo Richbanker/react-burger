@@ -7,7 +7,7 @@
     "build": "vite build",
     "commit": "cz",
     "check": "stylelint \"./src/**/*.css\" && eslint src/",
-    "e2e": "npx playwright test",
+    "e2e": "node e2e/run.mjs",
     "e2e:ui": "npx playwright test --ui",
     "dev": "vite",
     "deploy": "gh-pages -d dist",

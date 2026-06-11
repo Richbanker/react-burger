@@ -37,7 +37,7 @@ export const ingredientsSlice = createSlice({
       })
       .addCase(fetchIngredients.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload ?? 'шибка загрузки ингредиентов';
+        state.error = action.payload ?? 'Ошибка загрузки ингредиентов';
       });
   },
 });
