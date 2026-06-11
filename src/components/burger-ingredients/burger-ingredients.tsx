@@ -4,6 +4,13 @@ import { useState } from 'react';
 import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
 import { Modal } from '@components/modal/modal';
 
+import {
+  clearCurrentIngredient,
+  selectCurrentIngredient,
+  setCurrentIngredient,
+} from '../../services/current-ingredient/current-ingredient-slice';
+import { useAppDispatch, useAppSelector } from '../../services/hooks';
+
 import type { TIngredient } from '@utils/types';
 
 import styles from './burger-ingredients.module.css';
@@ -49,8 +56,9 @@ const IngredientCard = ({
 export const BurgerIngredients = ({
   ingredients,
 }: TBurgerIngredientsProps): React.JSX.Element => {
+  const dispatch = useAppDispatch();
+  const selectedIngredient = useAppSelector(selectCurrentIngredient);
   const [currentTab, setCurrentTab] = useState<TIngredientType>('bun');
-  const [selectedIngredient, setSelectedIngredient] = useState<TIngredient | null>(null);
 
   const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
   const sauces = ingredients.filter((ingredient) => ingredient.type === 'sauce');
@@ -61,11 +69,11 @@ export const BurgerIngredients = ({
   };
 
   const handleIngredientClick = (ingredient: TIngredient): void => {
-    setSelectedIngredient(ingredient);
+    dispatch(setCurrentIngredient(ingredient));
   };
 
   const handleCloseModal = (): void => {
-    setSelectedIngredient(null);
+    dispatch(clearCurrentIngredient());
   };
 
   const renderIngredients = (items: TIngredient[]): React.JSX.Element[] =>
@@ -81,19 +89,19 @@ export const BurgerIngredients = ({
     <section className={styles.burger_ingredients}>
       <nav className={styles.tabs}>
         <Tab value="bun" active={currentTab === 'bun'} onClick={handleTabClick}>
-          Булки
+          улки
         </Tab>
         <Tab value="sauce" active={currentTab === 'sauce'} onClick={handleTabClick}>
           Соусы
         </Tab>
         <Tab value="main" active={currentTab === 'main'} onClick={handleTabClick}>
-          Начинки
+          ачинки
         </Tab>
       </nav>
 
       <section className={`${styles.ingredients_list} custom-scroll`}>
         <section>
-          <h2 className="text text_type_main-medium mt-10 mb-6">Булки</h2>
+          <h2 className="text text_type_main-medium mt-10 mb-6">улки</h2>
           <ul className={styles.grid}>{renderIngredients(buns)}</ul>
         </section>
 
@@ -103,13 +111,13 @@ export const BurgerIngredients = ({
         </section>
 
         <section>
-          <h2 className="text text_type_main-medium mt-10 mb-6">Начинки</h2>
+          <h2 className="text text_type_main-medium mt-10 mb-6">ачинки</h2>
           <ul className={styles.grid}>{renderIngredients(mains)}</ul>
         </section>
       </section>
 
       {selectedIngredient && (
-        <Modal title="Детали ингредиента" onClose={handleCloseModal}>
+        <Modal title="етали ингредиента" onClose={handleCloseModal}>
           <IngredientDetails ingredient={selectedIngredient} />
         </Modal>
       )}
