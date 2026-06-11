@@ -18,7 +18,7 @@ export const IngredientDetails = ({
       <ul className={styles.nutrients}>
         <li className={styles.nutrient}>
           <span className="text text_type_main-default text_color_inactive">
-            Калории, ккал
+            алории, ккал
           </span>
           <span className="text text_type_digits-default text_color_inactive">
             {ingredient.calories}
@@ -26,23 +26,21 @@ export const IngredientDetails = ({
         </li>
         <li className={styles.nutrient}>
           <span className="text text_type_main-default text_color_inactive">
-            Белки, г
+            елки, г
           </span>
           <span className="text text_type_digits-default text_color_inactive">
             {ingredient.proteins}
           </span>
         </li>
         <li className={styles.nutrient}>
-          <span className="text text_type_main-default text_color_inactive">
-            Жиры, г
-          </span>
+          <span className="text text_type_main-default text_color_inactive">иры, г</span>
           <span className="text text_type_digits-default text_color_inactive">
             {ingredient.fat}
           </span>
         </li>
         <li className={styles.nutrient}>
           <span className="text text_type_main-default text_color_inactive">
-            Углеводы, г
+            глеводы, г
           </span>
           <span className="text text_type_digits-default text_color_inactive">
             {ingredient.carbohydrates}
