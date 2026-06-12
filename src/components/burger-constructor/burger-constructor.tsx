@@ -37,6 +37,7 @@ import styles from './burger-constructor.module.css';
 type TConstructorDragItem = {
   constructorId: string;
   index: number;
+  originalIndex: number;
 };
 
 type TConstructorIngredientItemProps = {
@@ -61,28 +62,56 @@ const ConstructorIngredientItem = ({
   >(
     () => ({
       type: DND_TYPES.constructorIngredient,
-      item: { constructorId: ingredient.constructorId, index },
+      item: { constructorId: ingredient.constructorId, index, originalIndex: index },
+      end: (item, monitor): void => {
+        if (item && !monitor.didDrop() && item.index !== item.originalIndex) {
+          moveIngredient(item.index, item.originalIndex);
+        }
+      },
       collect: (monitor): { isDragging: boolean } => ({
         isDragging: monitor.isDragging(),
       }),
     }),
-    [ingredient.constructorId, index]
+    [ingredient.constructorId, index, moveIngredient]
   );
 
   const [, dropRef] = useDrop<TConstructorDragItem>(
     () => ({
       accept: DND_TYPES.constructorIngredient,
-      drop: (item): void => {
-        const dragIndex = item.index;
-        const dropIndex = index;
-
-        if (dragIndex === dropIndex) {
+      hover: (item, monitor): void => {
+        if (!itemRef.current) {
           return;
         }
 
-        moveIngredient(dragIndex, dropIndex);
-        item.index = dropIndex;
+        const dragIndex = item.index;
+        const hoverIndex = index;
+
+        if (dragIndex === hoverIndex) {
+          return;
+        }
+
+        const hoverBoundingRect = itemRef.current.getBoundingClientRect();
+        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+        const clientOffset = monitor.getClientOffset();
+
+        if (!clientOffset) {
+          return;
+        }
+
+        const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+        if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+          return;
+        }
+
+        if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+          return;
+        }
+
+        moveIngredient(dragIndex, hoverIndex);
+        item.index = hoverIndex;
       },
+      drop: (): { moved: boolean } => ({ moved: true }),
     }),
     [index, moveIngredient]
   );
