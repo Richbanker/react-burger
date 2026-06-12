@@ -2,4 +2,5 @@
 
 export const DND_TYPES = {
   ingredient: 'ingredient',
+  constructorIngredient: 'constructorIngredient',
 } as const;

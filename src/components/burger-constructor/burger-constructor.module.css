@@ -31,6 +31,10 @@
   gap: 8px;
 }
 
+.item_dragging {
+  opacity: 0;
+}
+
 .order {
   display: flex;
   justify-content: flex-end;

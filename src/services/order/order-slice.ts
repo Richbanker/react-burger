@@ -1,4 +1,6 @@
-﻿import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
+import { createOrderApi } from '../../utils/api';
 
 type TOrderState = {
   number: number | null;
@@ -11,6 +13,21 @@ const initialState: TOrderState = {
   isLoading: false,
   error: null,
 };
+
+export const createOrder = createAsyncThunk<number, string[], { rejectValue: string }>(
+  'order/createOrder',
+  async (ingredientIds, { rejectWithValue }) => {
+    try {
+      return await createOrderApi(ingredientIds);
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+
+      return rejectWithValue('Неизвестная ошибка оформления заказа');
+    }
+  }
+);
 
 export const orderSlice = createSlice({
   name: 'order',
@@ -25,6 +42,22 @@ export const orderSlice = createSlice({
     selectOrderNumber: (state) => state.number,
     selectOrderIsLoading: (state) => state.isLoading,
     selectOrderError: (state) => state.error,
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(createOrder.pending, (state) => {
+        state.number = null;
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(createOrder.fulfilled, (state, action) => {
+        state.number = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(createOrder.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload ?? 'Ошибка оформления заказа';
+      });
   },
 });
 

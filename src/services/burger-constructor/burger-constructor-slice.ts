@@ -1,4 +1,4 @@
-﻿import { createSelector, createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice, nanoid } from '@reduxjs/toolkit';
 
 import type { TIngredient } from '../../utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
@@ -38,7 +38,7 @@ export const burgerConstructorSlice = createSlice({
       prepare: (ingredient: TIngredient) => ({
         payload: {
           ...ingredient,
-          constructorId: crypto.randomUUID(),
+          constructorId: nanoid(),
         },
       }),
     },

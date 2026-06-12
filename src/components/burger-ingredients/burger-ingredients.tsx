@@ -1,6 +1,7 @@
-﻿import { Counter, CurrencyIcon, Tab } from '@krgaa/react-developer-burger-ui-components';
-import { useRef, useState } from 'react';
+import { Counter, CurrencyIcon, Tab } from '@krgaa/react-developer-burger-ui-components';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
+import { useInView } from 'react-intersection-observer';
 
 import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
 import { Modal } from '@components/modal/modal';
@@ -29,6 +30,11 @@ type TIngredientCardProps = {
 };
 
 type TIngredientType = 'bun' | 'sauce' | 'main';
+
+const inViewOptions = {
+  rootMargin: '-80px 0px -70% 0px',
+  threshold: 0,
+};
 
 const IngredientCard = ({
   ingredient,
@@ -83,13 +89,65 @@ export const BurgerIngredients = ({
   const selectedIngredient = useAppSelector(selectCurrentIngredient);
   const ingredientCounts = useAppSelector(selectConstructorIngredientCounts);
   const [currentTab, setCurrentTab] = useState<TIngredientType>('bun');
+  const sectionRefs = useRef<Record<TIngredientType, HTMLElement | null>>({
+    bun: null,
+    sauce: null,
+    main: null,
+  });
+
+  const { ref: bunsInViewRef, inView: isBunsInView } = useInView(inViewOptions);
+  const { ref: saucesInViewRef, inView: isSaucesInView } = useInView(inViewOptions);
+  const { ref: mainsInViewRef, inView: isMainsInView } = useInView(inViewOptions);
 
   const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
   const sauces = ingredients.filter((ingredient) => ingredient.type === 'sauce');
   const mains = ingredients.filter((ingredient) => ingredient.type === 'main');
 
+  useEffect(() => {
+    if (isMainsInView) {
+      setCurrentTab('main');
+      return;
+    }
+
+    if (isSaucesInView) {
+      setCurrentTab('sauce');
+      return;
+    }
+
+    if (isBunsInView) {
+      setCurrentTab('bun');
+    }
+  }, [isBunsInView, isMainsInView, isSaucesInView]);
+
+  const setBunsRefs = useCallback(
+    (node: HTMLElement | null): void => {
+      sectionRefs.current.bun = node;
+      bunsInViewRef(node);
+    },
+    [bunsInViewRef]
+  );
+
+  const setSaucesRefs = useCallback(
+    (node: HTMLElement | null): void => {
+      sectionRefs.current.sauce = node;
+      saucesInViewRef(node);
+    },
+    [saucesInViewRef]
+  );
+
+  const setMainsRefs = useCallback(
+    (node: HTMLElement | null): void => {
+      sectionRefs.current.main = node;
+      mainsInViewRef(node);
+    },
+    [mainsInViewRef]
+  );
+
   const handleTabClick = (value: string): void => {
-    setCurrentTab(value as TIngredientType);
+    const ingredientType = value as TIngredientType;
+
+    setCurrentTab(ingredientType);
+    sectionRefs.current[ingredientType]?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleIngredientClick = (ingredient: TIngredient): void => {
@@ -131,17 +189,17 @@ export const BurgerIngredients = ({
       </nav>
 
       <section className={`${styles.ingredients_list} custom-scroll`}>
-        <section>
+        <section ref={setBunsRefs}>
           <h2 className="text text_type_main-medium mt-10 mb-6">Булки</h2>
           <ul className={styles.grid}>{renderIngredients(buns)}</ul>
         </section>
 
-        <section>
+        <section ref={setSaucesRefs}>
           <h2 className="text text_type_main-medium mt-10 mb-6">Соусы</h2>
           <ul className={styles.grid}>{renderIngredients(sauces)}</ul>
         </section>
 
-        <section>
+        <section ref={setMainsRefs}>
           <h2 className="text text_type_main-medium mt-10 mb-6">Начинки</h2>
           <ul className={styles.grid}>{renderIngredients(mains)}</ul>
         </section>

@@ -1,11 +1,11 @@
-﻿import {
+import {
   Button,
   ConstructorElement,
   CurrencyIcon,
   DragIcon,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useRef, useState } from 'react';
-import { useDrop } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 
 import { Modal } from '@components/modal/modal';
 import { OrderDetails } from '@components/order-details/order-details';
@@ -13,16 +13,97 @@ import { DND_TYPES } from '@utils/constants';
 
 import {
   addConstructorIngredient,
+  clearConstructor,
+  moveConstructorIngredient,
   removeConstructorIngredient,
   selectConstructorBun,
   selectConstructorIngredients,
   selectConstructorTotalPrice,
+  type TConstructorIngredient,
 } from '../../services/burger-constructor/burger-constructor-slice';
 import { useAppDispatch, useAppSelector } from '../../services/hooks';
+import {
+  clearOrder,
+  createOrder,
+  selectOrderError,
+  selectOrderIsLoading,
+  selectOrderNumber,
+} from '../../services/order/order-slice';
 
 import type { TIngredient } from '@utils/types';
 
 import styles from './burger-constructor.module.css';
+
+type TConstructorDragItem = {
+  constructorId: string;
+  index: number;
+};
+
+type TConstructorIngredientItemProps = {
+  ingredient: TConstructorIngredient;
+  index: number;
+  moveIngredient: (fromIndex: number, toIndex: number) => void;
+  onRemove: (constructorId: string) => void;
+};
+
+const ConstructorIngredientItem = ({
+  ingredient,
+  index,
+  moveIngredient,
+  onRemove,
+}: TConstructorIngredientItemProps): React.JSX.Element => {
+  const itemRef = useRef<HTMLLIElement>(null);
+
+  const [{ isDragging }, dragRef] = useDrag<
+    TConstructorDragItem,
+    void,
+    { isDragging: boolean }
+  >(
+    () => ({
+      type: DND_TYPES.constructorIngredient,
+      item: { constructorId: ingredient.constructorId, index },
+      collect: (monitor): { isDragging: boolean } => ({
+        isDragging: monitor.isDragging(),
+      }),
+    }),
+    [ingredient.constructorId, index]
+  );
+
+  const [, dropRef] = useDrop<TConstructorDragItem>(
+    () => ({
+      accept: DND_TYPES.constructorIngredient,
+      drop: (item): void => {
+        const dragIndex = item.index;
+        const dropIndex = index;
+
+        if (dragIndex === dropIndex) {
+          return;
+        }
+
+        moveIngredient(dragIndex, dropIndex);
+        item.index = dropIndex;
+      },
+    }),
+    [index, moveIngredient]
+  );
+
+  dragRef(dropRef(itemRef));
+
+  return (
+    <li
+      ref={itemRef}
+      className={`${styles.item} ${isDragging ? styles.item_dragging : ''}`}
+    >
+      <DragIcon type="primary" />
+      <ConstructorElement
+        text={ingredient.name}
+        price={ingredient.price}
+        thumbnail={ingredient.image}
+        handleClose={() => onRemove(ingredient.constructorId)}
+      />
+    </li>
+  );
+};
 
 export const BurgerConstructor = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
@@ -32,6 +113,9 @@ export const BurgerConstructor = (): React.JSX.Element => {
   const bun = useAppSelector(selectConstructorBun);
   const burgerConstructorItems = useAppSelector(selectConstructorIngredients);
   const totalPrice = useAppSelector(selectConstructorTotalPrice);
+  const orderNumber = useAppSelector(selectOrderNumber);
+  const isOrderLoading = useAppSelector(selectOrderIsLoading);
+  const orderError = useAppSelector(selectOrderError);
 
   const [{ isOver }, dropTarget] = useDrop<TIngredient, void, { isOver: boolean }>(
     () => ({
@@ -48,12 +132,33 @@ export const BurgerConstructor = (): React.JSX.Element => {
 
   dropTarget(constructorRef);
 
-  const handleOpenOrderModal = (): void => {
-    setIsOrderModalOpen(true);
+  const handleCreateOrder = async (): Promise<void> => {
+    if (!bun) {
+      return;
+    }
+
+    const ingredientIds = [
+      bun._id,
+      ...burgerConstructorItems.map((ingredient) => ingredient._id),
+      bun._id,
+    ];
+
+    try {
+      await dispatch(createOrder(ingredientIds)).unwrap();
+      dispatch(clearConstructor());
+      setIsOrderModalOpen(true);
+    } catch {
+      setIsOrderModalOpen(false);
+    }
   };
 
   const handleCloseOrderModal = (): void => {
     setIsOrderModalOpen(false);
+    dispatch(clearOrder());
+  };
+
+  const handleMoveIngredient = (fromIndex: number, toIndex: number): void => {
+    dispatch(moveConstructorIngredient({ fromIndex, toIndex }));
   };
 
   return (
@@ -82,18 +187,16 @@ export const BurgerConstructor = (): React.JSX.Element => {
 
       <ul className={`${styles.items} custom-scroll`}>
         {burgerConstructorItems.length > 0 ? (
-          burgerConstructorItems.map((ingredient) => (
-            <li className={styles.item} key={ingredient.constructorId}>
-              <DragIcon type="primary" />
-              <ConstructorElement
-                text={ingredient.name}
-                price={ingredient.price}
-                thumbnail={ingredient.image}
-                handleClose={() =>
-                  dispatch(removeConstructorIngredient(ingredient.constructorId))
-                }
-              />
-            </li>
+          burgerConstructorItems.map((ingredient, index) => (
+            <ConstructorIngredientItem
+              key={ingredient.constructorId}
+              ingredient={ingredient}
+              index={index}
+              moveIngredient={handleMoveIngredient}
+              onRemove={(constructorId) =>
+                dispatch(removeConstructorIngredient(constructorId))
+              }
+            />
           ))
         ) : (
           <li
@@ -141,17 +244,25 @@ export const BurgerConstructor = (): React.JSX.Element => {
             htmlType="button"
             type="primary"
             size="large"
-            disabled={!bun || burgerConstructorItems.length === 0}
-            onClick={handleOpenOrderModal}
+            disabled={!bun || burgerConstructorItems.length === 0 || isOrderLoading}
+            onClick={() => {
+              void handleCreateOrder();
+            }}
           >
-            Оформить заказ
+            {isOrderLoading ? 'Оформляем...' : 'Оформить заказ'}
           </Button>
         </div>
       </div>
 
-      {isOrderModalOpen && (
+      {orderError && (
+        <p className="text text_type_main-default text_color_inactive mt-4 pr-4">
+          {orderError}
+        </p>
+      )}
+
+      {isOrderModalOpen && orderNumber && (
         <Modal onClose={handleCloseOrderModal}>
-          <OrderDetails />
+          <OrderDetails orderNumber={orderNumber} />
         </Modal>
       )}
     </section>
