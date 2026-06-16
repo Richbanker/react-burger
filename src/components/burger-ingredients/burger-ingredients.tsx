@@ -1,8 +1,19 @@
-﻿import { Counter, CurrencyIcon, Tab } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
+import { Counter, CurrencyIcon, Tab } from '@krgaa/react-developer-burger-ui-components';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDrag } from 'react-dnd';
+import { useInView } from 'react-intersection-observer';
 
 import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
 import { Modal } from '@components/modal/modal';
+import { DND_TYPES } from '@utils/constants';
+
+import { selectConstructorIngredientCounts } from '../../services/burger-constructor/burger-constructor-slice';
+import {
+  clearCurrentIngredient,
+  selectCurrentIngredient,
+  setCurrentIngredient,
+} from '../../services/current-ingredient/current-ingredient-slice';
+import { useAppDispatch, useAppSelector } from '../../services/hooks';
 
 import type { TIngredient } from '@utils/types';
 
@@ -14,25 +25,50 @@ type TBurgerIngredientsProps = {
 
 type TIngredientCardProps = {
   ingredient: TIngredient;
+  count: number;
   onClick: (ingredient: TIngredient) => void;
 };
 
 type TIngredientType = 'bun' | 'sauce' | 'main';
 
+const inViewOptions = {
+  rootMargin: '-80px 0px -70% 0px',
+  threshold: 0,
+};
+
 const IngredientCard = ({
   ingredient,
+  count,
   onClick,
 }: TIngredientCardProps): React.JSX.Element => {
-  const count = ingredient.type === 'bun' ? 2 : 1;
+  const cardRef = useRef<HTMLLIElement>(null);
+
+  const [{ isDragging }, dragRef] = useDrag<TIngredient, void, { isDragging: boolean }>(
+    () => ({
+      type: DND_TYPES.ingredient,
+      item: ingredient,
+      collect: (monitor): { isDragging: boolean } => ({
+        isDragging: monitor.isDragging(),
+      }),
+    }),
+    [ingredient]
+  );
+
+  dragRef(cardRef);
 
   return (
-    <li className={styles.card}>
+    <li
+      ref={cardRef}
+      className={`${styles.card} ${isDragging ? styles.card_dragging : ''}`}
+    >
       <button
         className={styles.card_button}
         type="button"
         onClick={() => onClick(ingredient)}
       >
-        <Counter count={count} size="default" extraClass={styles.counter} />
+        {count > 0 && (
+          <Counter count={count} size="default" extraClass={styles.counter} />
+        )}
         <img className={styles.image} src={ingredient.image} alt={ingredient.name} />
         <p className={`${styles.price} text text_type_digits-default mt-1 mb-1`}>
           {ingredient.price}
@@ -49,23 +85,77 @@ const IngredientCard = ({
 export const BurgerIngredients = ({
   ingredients,
 }: TBurgerIngredientsProps): React.JSX.Element => {
+  const dispatch = useAppDispatch();
+  const selectedIngredient = useAppSelector(selectCurrentIngredient);
+  const ingredientCounts = useAppSelector(selectConstructorIngredientCounts);
   const [currentTab, setCurrentTab] = useState<TIngredientType>('bun');
-  const [selectedIngredient, setSelectedIngredient] = useState<TIngredient | null>(null);
+  const sectionRefs = useRef<Record<TIngredientType, HTMLElement | null>>({
+    bun: null,
+    sauce: null,
+    main: null,
+  });
+
+  const { ref: bunsInViewRef, inView: isBunsInView } = useInView(inViewOptions);
+  const { ref: saucesInViewRef, inView: isSaucesInView } = useInView(inViewOptions);
+  const { ref: mainsInViewRef, inView: isMainsInView } = useInView(inViewOptions);
 
   const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
   const sauces = ingredients.filter((ingredient) => ingredient.type === 'sauce');
   const mains = ingredients.filter((ingredient) => ingredient.type === 'main');
 
+  useEffect(() => {
+    if (isMainsInView) {
+      setCurrentTab('main');
+      return;
+    }
+
+    if (isSaucesInView) {
+      setCurrentTab('sauce');
+      return;
+    }
+
+    if (isBunsInView) {
+      setCurrentTab('bun');
+    }
+  }, [isBunsInView, isMainsInView, isSaucesInView]);
+
+  const setBunsRefs = useCallback(
+    (node: HTMLElement | null): void => {
+      sectionRefs.current.bun = node;
+      bunsInViewRef(node);
+    },
+    [bunsInViewRef]
+  );
+
+  const setSaucesRefs = useCallback(
+    (node: HTMLElement | null): void => {
+      sectionRefs.current.sauce = node;
+      saucesInViewRef(node);
+    },
+    [saucesInViewRef]
+  );
+
+  const setMainsRefs = useCallback(
+    (node: HTMLElement | null): void => {
+      sectionRefs.current.main = node;
+      mainsInViewRef(node);
+    },
+    [mainsInViewRef]
+  );
+
   const handleTabClick = (value: string): void => {
-    setCurrentTab(value as TIngredientType);
+    const ingredientType = value as TIngredientType;
+
+    setCurrentTab(ingredientType);
+    sectionRefs.current[ingredientType]?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleIngredientClick = (ingredient: TIngredient): void => {
-    setSelectedIngredient(ingredient);
+    dispatch(setCurrentIngredient(ingredient));
   };
 
   const handleCloseModal = (): void => {
-    setSelectedIngredient(null);
+    dispatch(clearCurrentIngredient());
   };
 
   const renderIngredients = (items: TIngredient[]): React.JSX.Element[] =>
@@ -73,6 +163,7 @@ export const BurgerIngredients = ({
       <IngredientCard
         key={ingredient._id}
         ingredient={ingredient}
+        count={ingredientCounts[ingredient._id] ?? 0}
         onClick={handleIngredientClick}
       />
     ));
@@ -80,29 +171,35 @@ export const BurgerIngredients = ({
   return (
     <section className={styles.burger_ingredients}>
       <nav className={styles.tabs}>
-        <Tab value="bun" active={currentTab === 'bun'} onClick={handleTabClick}>
-          Булки
-        </Tab>
-        <Tab value="sauce" active={currentTab === 'sauce'} onClick={handleTabClick}>
-          Соусы
-        </Tab>
-        <Tab value="main" active={currentTab === 'main'} onClick={handleTabClick}>
-          Начинки
-        </Tab>
+        <div>
+          <Tab value="bun" active={currentTab === 'bun'} onClick={handleTabClick}>
+            Булки
+          </Tab>
+        </div>
+        <div>
+          <Tab value="sauce" active={currentTab === 'sauce'} onClick={handleTabClick}>
+            Соусы
+          </Tab>
+        </div>
+        <div>
+          <Tab value="main" active={currentTab === 'main'} onClick={handleTabClick}>
+            Начинки
+          </Tab>
+        </div>
       </nav>
 
       <section className={`${styles.ingredients_list} custom-scroll`}>
-        <section>
+        <section ref={setBunsRefs}>
           <h2 className="text text_type_main-medium mt-10 mb-6">Булки</h2>
           <ul className={styles.grid}>{renderIngredients(buns)}</ul>
         </section>
 
-        <section>
+        <section ref={setSaucesRefs}>
           <h2 className="text text_type_main-medium mt-10 mb-6">Соусы</h2>
           <ul className={styles.grid}>{renderIngredients(sauces)}</ul>
         </section>
 
-        <section>
+        <section ref={setMainsRefs}>
           <h2 className="text text_type_main-medium mt-10 mb-6">Начинки</h2>
           <ul className={styles.grid}>{renderIngredients(mains)}</ul>
         </section>
