@@ -17,7 +17,7 @@ import { ProfileOrdersPage } from '@pages/profile-orders-page';
 import { ProfilePage } from '@pages/profile-page';
 import { RegisterPage } from '@pages/register-page';
 import { ResetPasswordPage } from '@pages/reset-password-page';
-import { checkUserAuth } from '@services/auth/auth-slice';
+import { checkUserAuth } from '@services/auth/auth-actions';
 import { useAppDispatch, useAppSelector } from '@services/hooks';
 import { fetchIngredients } from '@services/ingredients/ingredients-actions';
 import {

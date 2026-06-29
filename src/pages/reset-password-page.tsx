@@ -6,11 +6,8 @@ import {
 import { useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 
-import {
-  resetPassword,
-  selectAuthError,
-  selectAuthIsLoading,
-} from '@services/auth/auth-slice';
+import { resetPassword } from '@services/auth/auth-actions';
+import { selectAuthError, selectAuthIsLoading } from '@services/auth/auth-slice';
 import { useAppDispatch, useAppSelector } from '@services/hooks';
 import { PASSWORD_RESET_ALLOWED_KEY } from '@utils/constants';
 

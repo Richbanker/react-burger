@@ -24,9 +24,9 @@ import {
   type TConstructorIngredient,
 } from '../../services/burger-constructor/burger-constructor-slice';
 import { useAppDispatch, useAppSelector } from '../../services/hooks';
+import { createOrder } from '../../services/order/order-actions';
 import {
   clearOrder,
-  createOrder,
   selectOrderError,
   selectOrderIsLoading,
   selectOrderNumber,

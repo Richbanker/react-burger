@@ -2,11 +2,8 @@ import { Button, EmailInput } from '@krgaa/react-developer-burger-ui-components'
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import {
-  forgotPassword,
-  selectAuthError,
-  selectAuthIsLoading,
-} from '@services/auth/auth-slice';
+import { forgotPassword } from '@services/auth/auth-actions';
+import { selectAuthError, selectAuthIsLoading } from '@services/auth/auth-slice';
 import { useAppDispatch, useAppSelector } from '@services/hooks';
 import { PASSWORD_RESET_ALLOWED_KEY } from '@utils/constants';
 

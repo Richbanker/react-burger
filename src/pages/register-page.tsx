@@ -7,11 +7,8 @@ import {
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import {
-  registerUser,
-  selectAuthError,
-  selectAuthIsLoading,
-} from '@services/auth/auth-slice';
+import { registerUser } from '@services/auth/auth-actions';
+import { selectAuthError, selectAuthIsLoading } from '@services/auth/auth-slice';
 import { useAppDispatch, useAppSelector } from '@services/hooks';
 
 import type { ChangeEvent, FormEvent } from 'react';

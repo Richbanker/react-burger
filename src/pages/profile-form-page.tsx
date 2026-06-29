@@ -6,11 +6,11 @@ import {
 } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useMemo, useState } from 'react';
 
+import { updateUser } from '@services/auth/auth-actions';
 import {
   selectAuthError,
   selectAuthIsLoading,
   selectUser,
-  updateUser,
 } from '@services/auth/auth-slice';
 import { useAppDispatch, useAppSelector } from '@services/hooks';
 

@@ -1,6 +1,6 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 
-import { logoutUser } from '@services/auth/auth-slice';
+import { logoutUser } from '@services/auth/auth-actions';
 import { useAppDispatch } from '@services/hooks';
 
 export const ProfilePage = (): React.JSX.Element => {
@@ -8,8 +8,11 @@ export const ProfilePage = (): React.JSX.Element => {
   const navigate = useNavigate();
 
   const handleLogout = async (): Promise<void> => {
-    await dispatch(logoutUser()).unwrap();
-    void navigate('/login', { replace: true });
+    try {
+      await dispatch(logoutUser()).unwrap();
+    } finally {
+      void navigate('/login', { replace: true });
+    }
   };
 
   return (
