@@ -39,9 +39,9 @@ export const orderSlice = createSlice({
     },
   },
   selectors: {
-    selectOrderNumber: (state) => state.number,
-    selectOrderIsLoading: (state) => state.isLoading,
     selectOrderError: (state) => state.error,
+    selectOrderIsLoading: (state) => state.isLoading,
+    selectOrderNumber: (state) => state.number,
   },
   extraReducers: (builder) => {
     builder
@@ -63,5 +63,5 @@ export const orderSlice = createSlice({
 
 export const { clearOrder } = orderSlice.actions;
 
-export const { selectOrderNumber, selectOrderIsLoading, selectOrderError } =
+export const { selectOrderError, selectOrderIsLoading, selectOrderNumber } =
   orderSlice.selectors;

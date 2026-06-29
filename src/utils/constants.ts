@@ -4,3 +4,5 @@ export const DND_TYPES = {
   ingredient: 'ingredient',
   constructorIngredient: 'constructorIngredient',
 } as const;
+
+export const PASSWORD_RESET_ALLOWED_KEY = 'passwordResetAllowed';

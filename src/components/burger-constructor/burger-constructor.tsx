@@ -6,9 +6,11 @@ import {
 } from '@krgaa/react-developer-burger-ui-components';
 import { useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Modal } from '@components/modal/modal';
 import { OrderDetails } from '@components/order-details/order-details';
+import { selectIsAuthenticated } from '@services/auth/auth-slice';
 import { DND_TYPES } from '@utils/constants';
 
 import {
@@ -136,6 +138,8 @@ const ConstructorIngredientItem = ({
 
 export const BurgerConstructor = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const constructorRef = useRef<HTMLElement>(null);
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
 
@@ -145,6 +149,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
   const orderNumber = useAppSelector(selectOrderNumber);
   const isOrderLoading = useAppSelector(selectOrderIsLoading);
   const orderError = useAppSelector(selectOrderError);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   const [{ isOver }, dropTarget] = useDrop<TIngredient, void, { isOver: boolean }>(
     () => ({
@@ -163,6 +168,11 @@ export const BurgerConstructor = (): React.JSX.Element => {
 
   const handleCreateOrder = async (): Promise<void> => {
     if (!bun) {
+      return;
+    }
+
+    if (!isAuthenticated) {
+      void navigate('/login', { state: { from: location } });
       return;
     }
 
@@ -196,7 +206,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
         <div className={`${styles.locked_item} pl-8 pr-4`}>
           <ConstructorElement
             type="top"
-            isLocked={true}
+            isLocked
             text={`${bun.name} (верх)`}
             price={bun.price}
             thumbnail={bun.image}
@@ -244,7 +254,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
         <div className={`${styles.locked_item} pl-8 pr-4`}>
           <ConstructorElement
             type="bottom"
-            isLocked={true}
+            isLocked
             text={`${bun.name} (низ)`}
             price={bun.price}
             thumbnail={bun.image}

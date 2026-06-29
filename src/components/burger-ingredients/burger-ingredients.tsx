@@ -2,18 +2,12 @@ import { Counter, CurrencyIcon, Tab } from '@krgaa/react-developer-burger-ui-com
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
 import { useInView } from 'react-intersection-observer';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
-import { Modal } from '@components/modal/modal';
 import { DND_TYPES } from '@utils/constants';
 
 import { selectConstructorIngredientCounts } from '../../services/burger-constructor/burger-constructor-slice';
-import {
-  clearCurrentIngredient,
-  selectCurrentIngredient,
-  setCurrentIngredient,
-} from '../../services/current-ingredient/current-ingredient-slice';
-import { useAppDispatch, useAppSelector } from '../../services/hooks';
+import { useAppSelector } from '../../services/hooks';
 
 import type { TIngredient } from '@utils/types';
 
@@ -85,8 +79,8 @@ const IngredientCard = ({
 export const BurgerIngredients = ({
   ingredients,
 }: TBurgerIngredientsProps): React.JSX.Element => {
-  const dispatch = useAppDispatch();
-  const selectedIngredient = useAppSelector(selectCurrentIngredient);
+  const navigate = useNavigate();
+  const location = useLocation();
   const ingredientCounts = useAppSelector(selectConstructorIngredientCounts);
   const [currentTab, setCurrentTab] = useState<TIngredientType>('bun');
   const sectionRefs = useRef<Record<TIngredientType, HTMLElement | null>>({
@@ -151,11 +145,9 @@ export const BurgerIngredients = ({
   };
 
   const handleIngredientClick = (ingredient: TIngredient): void => {
-    dispatch(setCurrentIngredient(ingredient));
-  };
-
-  const handleCloseModal = (): void => {
-    dispatch(clearCurrentIngredient());
+    void navigate(`/ingredients/${ingredient._id}`, {
+      state: { backgroundLocation: location },
+    });
   };
 
   const renderIngredients = (items: TIngredient[]): React.JSX.Element[] =>
@@ -204,12 +196,6 @@ export const BurgerIngredients = ({
           <ul className={styles.grid}>{renderIngredients(mains)}</ul>
         </section>
       </section>
-
-      {selectedIngredient && (
-        <Modal title="Детали ингредиента" onClose={handleCloseModal}>
-          <IngredientDetails ingredient={selectedIngredient} />
-        </Modal>
-      )}
     </section>
   );
 };

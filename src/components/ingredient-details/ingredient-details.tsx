@@ -1,19 +1,41 @@
+import { useParams } from 'react-router-dom';
+
+import { useAppSelector } from '@services/hooks';
+import { selectIngredients } from '@services/ingredients/ingredients-slice';
+
 import type { TIngredient } from '@utils/types';
 
 import styles from './ingredient-details.module.css';
 
 type TIngredientDetailsProps = {
-  ingredient: TIngredient;
+  ingredient?: TIngredient;
 };
 
 export const IngredientDetails = ({
   ingredient,
 }: TIngredientDetailsProps): React.JSX.Element => {
+  const { id } = useParams();
+  const ingredients = useAppSelector(selectIngredients);
+  const currentIngredient =
+    ingredient ?? ingredients.find((item) => item._id === id) ?? null;
+
+  if (!currentIngredient) {
+    return (
+      <p className="text text_type_main-medium text_color_inactive">
+        Ингредиент не найден
+      </p>
+    );
+  }
+
   return (
     <article className={styles.details}>
-      <img className={styles.image} src={ingredient.image_large} alt={ingredient.name} />
+      <img
+        className={styles.image}
+        src={currentIngredient.image_large}
+        alt={currentIngredient.name}
+      />
 
-      <h3 className="text text_type_main-medium mt-4 mb-8">{ingredient.name}</h3>
+      <h3 className="text text_type_main-medium mt-4 mb-8">{currentIngredient.name}</h3>
 
       <ul className={styles.nutrients}>
         <li className={styles.nutrient}>
@@ -21,7 +43,7 @@ export const IngredientDetails = ({
             Калории, ккал
           </span>
           <span className="text text_type_digits-default text_color_inactive">
-            {ingredient.calories}
+            {currentIngredient.calories}
           </span>
         </li>
         <li className={styles.nutrient}>
@@ -29,7 +51,7 @@ export const IngredientDetails = ({
             Белки, г
           </span>
           <span className="text text_type_digits-default text_color_inactive">
-            {ingredient.proteins}
+            {currentIngredient.proteins}
           </span>
         </li>
         <li className={styles.nutrient}>
@@ -37,7 +59,7 @@ export const IngredientDetails = ({
             Жиры, г
           </span>
           <span className="text text_type_digits-default text_color_inactive">
-            {ingredient.fat}
+            {currentIngredient.fat}
           </span>
         </li>
         <li className={styles.nutrient}>
@@ -45,7 +67,7 @@ export const IngredientDetails = ({
             Углеводы, г
           </span>
           <span className="text text_type_digits-default text_color_inactive">
-            {ingredient.carbohydrates}
+            {currentIngredient.carbohydrates}
           </span>
         </li>
       </ul>
