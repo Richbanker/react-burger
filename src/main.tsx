@@ -9,6 +9,7 @@ import { App } from './components/app/app';
 import { store } from './services/store';
 
 import './index.css';
+import './pages/pages.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

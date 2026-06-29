@@ -1,4 +1,3 @@
-/* eslint-disable css-modules/no-unused-class */
 import {
   Button,
   EmailInput,
@@ -16,8 +15,6 @@ import {
 import { useAppDispatch, useAppSelector } from '@services/hooks';
 
 import type { ChangeEvent, FormEvent } from 'react';
-
-import styles from './pages.module.css';
 
 export const ProfileFormPage = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
@@ -80,8 +77,8 @@ export const ProfileFormPage = (): React.JSX.Element => {
   };
 
   return (
-    <section className={styles.profile_form}>
-      <form className={styles.form} onSubmit={(event) => void handleSubmit(event)}>
+    <section className="page_profile_form">
+      <form className="page_form" onSubmit={(event) => void handleSubmit(event)}>
         <Input
           required
           icon="EditIcon"
@@ -108,7 +105,7 @@ export const ProfileFormPage = (): React.JSX.Element => {
         />
 
         {hasChanges && (
-          <div className={styles.actions}>
+          <div className="page_actions">
             <Button
               htmlType="button"
               type="secondary"
@@ -124,9 +121,7 @@ export const ProfileFormPage = (): React.JSX.Element => {
         )}
       </form>
 
-      <p className={`${styles.message} text text_type_main-default mt-6`}>
-        {error ?? ''}
-      </p>
+      <p className="page_message text text_type_main-default mt-6">{error ?? ''}</p>
     </section>
   );
 };

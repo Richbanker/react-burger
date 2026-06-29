@@ -1,10 +1,7 @@
-/* eslint-disable css-modules/no-unused-class */
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 
 import { logoutUser } from '@services/auth/auth-slice';
 import { useAppDispatch } from '@services/hooks';
-
-import styles from './pages.module.css';
 
 export const ProfilePage = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
@@ -16,14 +13,14 @@ export const ProfilePage = (): React.JSX.Element => {
   };
 
   return (
-    <main className={styles.profile}>
+    <main className="page_profile">
       <aside>
-        <nav className={styles.profile_nav}>
+        <nav className="page_profile_nav">
           <NavLink
             end
             className={({ isActive }) =>
-              `${styles.profile_link} ${
-                isActive ? styles.profile_link_active : ''
+              `page_profile_link ${
+                isActive ? 'page_profile_active' : ''
               } text text_type_main-medium`
             }
             to="/profile"
@@ -32,8 +29,8 @@ export const ProfilePage = (): React.JSX.Element => {
           </NavLink>
           <NavLink
             className={({ isActive }) =>
-              `${styles.profile_link} ${
-                isActive ? styles.profile_link_active : ''
+              `page_profile_link ${
+                isActive ? 'page_profile_active' : ''
               } text text_type_main-medium`
             }
             to="/profile/orders"
@@ -41,7 +38,7 @@ export const ProfilePage = (): React.JSX.Element => {
             История заказов
           </NavLink>
           <button
-            className={`${styles.profile_button} text text_type_main-medium`}
+            className="page_profile_button text text_type_main-medium"
             type="button"
             onClick={() => void handleLogout()}
           >
@@ -49,9 +46,7 @@ export const ProfilePage = (): React.JSX.Element => {
           </button>
         </nav>
 
-        <p
-          className={`${styles.profile_hint} text text_type_main-default text_color_inactive mt-20`}
-        >
+        <p className="page_profile_hint text text_type_main-default text_color_inactive mt-20">
           В этом разделе вы можете изменить свои персональные данные
         </p>
       </aside>

@@ -1,17 +1,17 @@
-.home {
+.page_home {
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
 
-.title {
+.page_title {
   width: 100%;
   max-width: 1260px;
   margin-right: auto;
   margin-left: auto;
 }
 
-.main {
+.page_main {
   display: flex;
   justify-content: space-between;
   width: 1240px;
@@ -20,36 +20,36 @@
   overflow: hidden;
 }
 
-.auth {
+.page_auth {
   width: 480px;
   margin: 120px auto 0;
   text-align: center;
 }
 
-.form {
+.page_form {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 24px;
 }
 
-.links {
+.page_links {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.link {
+.page_link {
   color: var(--colors-interface-accent);
   text-decoration: none;
 }
 
-.message {
+.page_message {
   min-height: 24px;
   color: var(--colors-interface-error);
 }
 
-.profile {
+.page_profile {
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
   gap: 60px;
@@ -58,14 +58,14 @@
   margin: 120px auto 0;
 }
 
-.profile_nav {
+.page_profile_nav {
   display: flex;
   flex-direction: column;
   align-items: stretch;
 }
 
-.profile_link,
-.profile_button {
+.page_profile_link,
+.page_profile_button {
   display: flex;
   align-items: center;
   height: 64px;
@@ -78,29 +78,29 @@
   cursor: pointer;
 }
 
-.profile_link_active {
+.page_profile_active {
   color: var(--text-primary-color);
 }
 
-.profile_hint {
+.page_profile_hint {
   opacity: 0.4;
 }
 
-.profile_form {
+.page_profile_form {
   width: 480px;
 }
 
-.actions {
+.page_actions {
   display: flex;
   justify-content: flex-end;
   gap: 20px;
 }
 
-.placeholder {
+.page_placeholder {
   max-width: 640px;
 }
 
-.full_page {
+.page_full {
   width: 640px;
   margin: 80px auto 0;
   text-align: center;

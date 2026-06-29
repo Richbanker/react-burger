@@ -1,4 +1,3 @@
-/* eslint-disable css-modules/no-unused-class */
 import {
   Button,
   Input,
@@ -16,8 +15,6 @@ import { useAppDispatch, useAppSelector } from '@services/hooks';
 import { PASSWORD_RESET_ALLOWED_KEY } from '@utils/constants';
 
 import type { ChangeEvent, FormEvent } from 'react';
-
-import styles from './pages.module.css';
 
 export const ResetPasswordPage = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
@@ -48,8 +45,8 @@ export const ResetPasswordPage = (): React.JSX.Element => {
   };
 
   return (
-    <main className={styles.auth}>
-      <form className={styles.form} onSubmit={(event) => void handleSubmit(event)}>
+    <main className="page_auth">
+      <form className="page_form" onSubmit={(event) => void handleSubmit(event)}>
         <h1 className="text text_type_main-medium mb-3">Восстановление пароля</h1>
         <PasswordInput
           required
@@ -71,13 +68,11 @@ export const ResetPasswordPage = (): React.JSX.Element => {
         </Button>
       </form>
 
-      <p className={`${styles.message} text text_type_main-default mt-6`}>
-        {error ?? ''}
-      </p>
+      <p className="page_message text text_type_main-default mt-6">{error ?? ''}</p>
 
       <p className="text text_type_main-default text_color_inactive mt-20">
         Вспомнили пароль?{' '}
-        <Link className={styles.link} to="/login">
+        <Link className="page_link" to="/login">
           Войти
         </Link>
       </p>
