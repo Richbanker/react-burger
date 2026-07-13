@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
-import { createOrderApi } from '../../utils/api';
+import { createOrder } from './order-actions';
 
 type TOrderState = {
   number: number | null;
@@ -14,21 +14,6 @@ const initialState: TOrderState = {
   error: null,
 };
 
-export const createOrder = createAsyncThunk<number, string[], { rejectValue: string }>(
-  'order/createOrder',
-  async (ingredientIds, { rejectWithValue }) => {
-    try {
-      return await createOrderApi(ingredientIds);
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue(error.message);
-      }
-
-      return rejectWithValue('Неизвестная ошибка оформления заказа');
-    }
-  }
-);
-
 export const orderSlice = createSlice({
   name: 'order',
   initialState,
@@ -39,9 +24,9 @@ export const orderSlice = createSlice({
     },
   },
   selectors: {
-    selectOrderNumber: (state) => state.number,
-    selectOrderIsLoading: (state) => state.isLoading,
     selectOrderError: (state) => state.error,
+    selectOrderIsLoading: (state) => state.isLoading,
+    selectOrderNumber: (state) => state.number,
   },
   extraReducers: (builder) => {
     builder
@@ -63,5 +48,5 @@ export const orderSlice = createSlice({
 
 export const { clearOrder } = orderSlice.actions;
 
-export const { selectOrderNumber, selectOrderIsLoading, selectOrderError } =
+export const { selectOrderError, selectOrderIsLoading, selectOrderNumber } =
   orderSlice.selectors;
