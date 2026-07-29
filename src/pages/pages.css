@@ -58,6 +58,10 @@
   margin: 120px auto 0;
 }
 
+.page_profile_orders {
+  margin-top: 40px;
+}
+
 .page_profile_nav {
   display: flex;
   flex-direction: column;

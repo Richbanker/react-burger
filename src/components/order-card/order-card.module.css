@@ -1,0 +1,84 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 24px;
+  color: var(--text-primary-color);
+  text-align: left;
+  background: var(--background);
+  border: 0;
+  border-radius: 40px;
+  box-shadow:
+    0 0 1px rgb(0 0 0 / 4%),
+    0 4px 8px rgb(0 0 0 / 4%),
+    0 16px 24px rgb(0 0 0 / 4%),
+    0 24px 32px rgb(0 0 0 / 4%);
+  cursor: pointer;
+}
+
+.meta,
+.summary,
+.price {
+  display: flex;
+  align-items: center;
+}
+
+.meta,
+.summary {
+  justify-content: space-between;
+}
+
+.name {
+  display: block;
+}
+
+.status {
+  display: block;
+}
+
+.status_done {
+  color: var(--colors-interface-success);
+}
+
+.ingredients {
+  display: flex;
+  min-width: 0;
+}
+
+.ingredient {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  margin-right: -16px;
+  overflow: hidden;
+  background:
+    linear-gradient(var(--background-alt), var(--background-alt)) padding-box,
+    linear-gradient(45deg, #801ab2, #4c4cff) border-box;
+  border: 2px solid transparent;
+  border-radius: 50%;
+}
+
+.ingredient img {
+  width: 112px;
+  max-width: none;
+  height: 56px;
+  object-fit: cover;
+}
+
+.more {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(19 19 22 / 60%);
+}
+
+.price {
+  flex-shrink: 0;
+  gap: 8px;
+  margin-left: 24px;
+}

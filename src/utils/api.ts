@@ -76,7 +76,7 @@ export const getAccessToken = (): string | null => localStorage.getItem('accessT
 
 const getRefreshToken = (): string | null => localStorage.getItem('refreshToken');
 
-const refreshTokenApi = async (): Promise<TRefreshResponse> => {
+export const refreshTokenApi = async (): Promise<TRefreshResponse> => {
   const token = getRefreshToken();
 
   if (!token) {

@@ -5,6 +5,7 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { AppHeader } from '@components/app-header/app-header';
 import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
 import { Modal } from '@components/modal/modal';
+import { OrderInfo } from '@components/order-info/order-info';
 import { ProtectedRoute } from '@components/protected-route/protected-route';
 import { FeedPage } from '@pages/feed-page';
 import { ForgotPasswordPage } from '@pages/forgot-password-page';
@@ -12,6 +13,7 @@ import { HomePage } from '@pages/home-page';
 import { IngredientPage } from '@pages/ingredient-page';
 import { LoginPage } from '@pages/login-page';
 import { NotFoundPage } from '@pages/not-found-page';
+import { OrderPage } from '@pages/order-page';
 import { ProfileFormPage } from '@pages/profile-form-page';
 import { ProfileOrdersPage } from '@pages/profile-orders-page';
 import { ProfilePage } from '@pages/profile-page';
@@ -49,7 +51,7 @@ export const App = (): React.JSX.Element => {
     void dispatch(checkUserAuth());
   }, [dispatch]);
 
-  const handleCloseIngredientModal = (): void => {
+  const handleCloseModal = (): void => {
     void navigate(-1);
   };
 
@@ -74,6 +76,7 @@ export const App = (): React.JSX.Element => {
       <Routes location={backgroundLocation ?? location}>
         <Route path="/" element={<HomePage ingredients={ingredients} />} />
         <Route path="/feed" element={<FeedPage />} />
+        <Route path="/feed/:id" element={<OrderPage source="feed" />} />
         <Route path="/ingredients/:id" element={<IngredientPage />} />
         <Route
           path="/login"
@@ -108,6 +111,14 @@ export const App = (): React.JSX.Element => {
           }
         />
         <Route
+          path="/profile/orders/:id"
+          element={
+            <ProtectedRoute>
+              <OrderPage source="profile" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/profile"
           element={
             <ProtectedRoute>
@@ -126,9 +137,27 @@ export const App = (): React.JSX.Element => {
           <Route
             path="/ingredients/:id"
             element={
-              <Modal title="Детали ингредиента" onClose={handleCloseIngredientModal}>
+              <Modal title="Детали ингредиента" onClose={handleCloseModal}>
                 <IngredientDetails />
               </Modal>
+            }
+          />
+          <Route
+            path="/feed/:id"
+            element={
+              <Modal title="Информация о заказе" onClose={handleCloseModal}>
+                <OrderInfo source="feed" />
+              </Modal>
+            }
+          />
+          <Route
+            path="/profile/orders/:id"
+            element={
+              <ProtectedRoute>
+                <Modal title="Информация о заказе" onClose={handleCloseModal}>
+                  <OrderInfo source="profile" />
+                </Modal>
+              </ProtectedRoute>
             }
           />
         </Routes>
