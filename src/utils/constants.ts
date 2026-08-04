@@ -5,4 +5,6 @@ export const DND_TYPES = {
   constructorIngredient: 'constructorIngredient',
 } as const;
 
+export const WS_URL = 'wss://new-stellarburgers.education-services.ru/orders';
+
 export const PASSWORD_RESET_ALLOWED_KEY = 'passwordResetAllowed';
