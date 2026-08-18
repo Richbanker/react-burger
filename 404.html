@@ -2,14 +2,28 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/react-burger/logo.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
     <title>Stellar Burgers</title>
-    <script type="module" crossorigin src="/react-burger/assets/index-DX0mUiRl.js"></script>
-    <link rel="stylesheet" crossorigin href="/react-burger/assets/index-Bl0Ukvr8.css">
+    <script>
+      ((location) => {
+        const pathSegmentsToKeep = 1;
+        const repositoryRoot = location.pathname
+          .split('/')
+          .slice(0, pathSegmentsToKeep + 1)
+          .join('/');
+        const routePath = location.pathname
+          .split('/')
+          .slice(pathSegmentsToKeep + 1)
+          .join('/');
+        const query = location.search
+          ? `&${location.search.slice(1).replace(/&/g, '~and~')}`
+          : '';
+
+        location.replace(
+          `${location.protocol}//${location.host}${repositoryRoot}/?/${routePath}${query}${location.hash}`
+        );
+      })(window.location);
+    </script>
   </head>
-  <body>
-    <div id="root"></div>
-    <div id="modals"></div>
-  </body>
+  <body></body>
 </html>
