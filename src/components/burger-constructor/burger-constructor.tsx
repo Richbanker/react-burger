@@ -201,7 +201,11 @@ export const BurgerConstructor = (): React.JSX.Element => {
   };
 
   return (
-    <section ref={constructorRef} className={`${styles.burger_constructor} pt-25`}>
+    <section
+      ref={constructorRef}
+      data-testid="burger-constructor"
+      className={`${styles.burger_constructor} pt-25`}
+    >
       {bun ? (
         <div className={`${styles.locked_item} pl-8 pr-4`}>
           <ConstructorElement
@@ -278,7 +282,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
           <CurrencyIcon type="primary" />
         </p>
 
-        <div>
+        <div data-testid="order-button">
           <Button
             htmlType="button"
             type="primary"

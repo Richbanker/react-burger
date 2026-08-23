@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => ({
     }),
     tsconfigPaths(),
   ],
-  base: '',
+  base: mode === 'production' ? '/react-burger/' : '/',
   test: {
     exclude: ['e2e/**', 'node_modules/**', 'dist/**'],
     globals: true,

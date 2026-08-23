@@ -53,6 +53,7 @@ const IngredientCard = ({
   return (
     <li
       ref={cardRef}
+      data-testid={`ingredient-card-${ingredient._id}`}
       className={`${styles.card} ${isDragging ? styles.card_dragging : ''}`}
     >
       <button
