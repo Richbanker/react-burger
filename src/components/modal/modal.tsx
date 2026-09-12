@@ -40,9 +40,21 @@ export const Modal = ({
   return createPortal(
     <>
       <ModalOverlay onClose={onClose} />
-      <section data-testid="modal" className={styles.modal}>
+      <section
+        data-testid="modal"
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? 'modal-title' : undefined}
+        aria-label={title ? undefined : 'Диалоговое окно'}
+      >
         <header className={styles.header}>
-          <h2 className={`${styles.title} text text_type_main-large`}>{title}</h2>
+          <h2
+            id={title ? 'modal-title' : undefined}
+            className={`${styles.title} text text_type_main-large`}
+          >
+            {title}
+          </h2>
           <button
             className={styles.close_button}
             data-testid="modal-close"
