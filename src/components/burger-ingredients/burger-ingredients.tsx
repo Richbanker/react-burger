@@ -163,7 +163,7 @@ export const BurgerIngredients = ({
 
   return (
     <section className={styles.burger_ingredients}>
-      <nav className={styles.tabs}>
+      <div className={styles.tabs}>
         <div>
           <Tab value="bun" active={currentTab === 'bun'} onClick={handleTabClick}>
             Булки
@@ -179,7 +179,7 @@ export const BurgerIngredients = ({
             Начинки
           </Tab>
         </div>
-      </nav>
+      </div>
 
       <section className={`${styles.ingredients_list} custom-scroll`}>
         <section ref={setBunsRefs}>
