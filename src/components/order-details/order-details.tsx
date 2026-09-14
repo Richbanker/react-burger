@@ -12,7 +12,7 @@ export const OrderDetails = ({ orderNumber }: TOrderDetailsProps): React.JSX.Ele
       <p className="text text_type_digits-large mb-8">{orderNumber}</p>
       <p className="text text_type_main-medium mb-15">идентификатор заказа</p>
 
-      <div className={`${styles.icon} mb-15`}>
+      <div className={`${styles.icon} mb-15`} aria-hidden="true">
         <CheckMarkIcon type="primary" />
       </div>
 
