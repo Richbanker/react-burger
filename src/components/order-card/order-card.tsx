@@ -66,7 +66,7 @@ export const OrderCard = ({
                   key={`${ingredient._id}-${index}`}
                   style={{ zIndex: MAX_VISIBLE_INGREDIENTS - index }}
                 >
-                  <img src={ingredient.image_mobile} alt={ingredient.name} />
+                  <img src={ingredient.image_mobile} alt="" />
                   {isLast && hiddenCount > 0 && (
                     <span
                       className={`${styles.more} text text_type_main-default`}
