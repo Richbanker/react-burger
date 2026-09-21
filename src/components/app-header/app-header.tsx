@@ -39,7 +39,7 @@ export const AppHeader = (): React.JSX.Element => {
             )}
           </NavLink>
         </div>
-        <Link className={styles.logo} to="/">
+        <Link className={styles.logo} to="/" aria-label="На главную">
           <Logo />
         </Link>
         <NavLink
