@@ -67,7 +67,9 @@ export const LoginPage = (): React.JSX.Element => {
         </Button>
       </form>
 
-      <p className="page_message text text_type_main-default mt-6">{error ?? ''}</p>
+      <p className="page_message text text_type_main-default mt-6" role="alert">
+        {error ?? ''}
+      </p>
 
       <div className="page_links mt-15">
         <p className="text text_type_main-default text_color_inactive">
