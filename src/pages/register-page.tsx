@@ -67,7 +67,7 @@ export const RegisterPage = (): React.JSX.Element => {
         </Button>
       </form>
 
-      <p className="page_message text text_type_main-default mt-6">{error ?? ''}</p>
+      <p className="page_message text text_type_main-default mt-6" role="alert">\n        {error ?? ''}\n      </p>
 
       <p className="text text_type_main-default text_color_inactive mt-20">
         Уже зарегистрированы?{' '}
