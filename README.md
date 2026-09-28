@@ -2,6 +2,8 @@
 
 [![Просмотры README](https://vbr.nathanchung.dev/badge?page_id=Richbanker.react-burger&text=README_Views)](https://github.com/Richbanker/react-burger)
 
+[Открыть проект](https://rebrand.ly/richbanker-burger)
+
 ## Процедура создания коммита с проверками
 
 При создании коммита автоматически запускаются проверка линтерами `stylelint`, `eslint` и форматирование `prettier`.
