@@ -16,7 +16,7 @@ export const AppHeader = (): React.JSX.Element => {
 
   return (
     <header className={styles.header}>
-      <nav className={`${styles.menu} p-4`}>
+      <nav aria-label="Основная навигация" className={`${styles.menu} p-4`}>
         <div className={styles.menu_part_left}>
           <NavLink
             className={`${styles.link} ${isConstructorActive ? styles.link_active : ''}`}
