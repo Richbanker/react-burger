@@ -61,7 +61,9 @@ export const ProfileOrdersPage = (): React.JSX.Element => {
       )}
 
       {error && (
-        <p className="text text_type_main-default text_color_inactive mt-6">{error}</p>
+        <p role="alert" className="text text_type_main-default text_color_inactive mt-6">
+          {error}
+        </p>
       )}
     </section>
   );
