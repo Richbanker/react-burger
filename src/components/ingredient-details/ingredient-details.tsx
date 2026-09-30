@@ -32,7 +32,7 @@ export const IngredientDetails = ({
       <img
         className={styles.image}
         src={currentIngredient.image_large}
-        alt={currentIngredient.name}
+        alt=""
       />
 
       <h3 className="text text_type_main-medium mt-4 mb-8">{currentIngredient.name}</h3>
