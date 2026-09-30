@@ -100,7 +100,7 @@ export const OrderInfo = ({ source }: TOrderInfoProps): React.JSX.Element => {
         {ingredientRows.map(({ ingredient, count }) => (
           <li className={styles.ingredient} key={ingredient._id}>
             <span className={styles.image}>
-              <img src={ingredient.image_mobile} alt={ingredient.name} />
+              <img src={ingredient.image_mobile} alt="" />
             </span>
             <span className={`${styles.ingredient_name} text text_type_main-default`}>
               {ingredient.name}
