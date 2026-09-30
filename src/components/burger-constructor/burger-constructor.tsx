@@ -298,7 +298,10 @@ export const BurgerConstructor = (): React.JSX.Element => {
       </div>
 
       {orderError && (
-        <p className="text text_type_main-default text_color_inactive mt-4 pr-4">
+        <p
+          role="alert"
+          className="text text_type_main-default text_color_inactive mt-4 pr-4"
+        >
           {orderError}
         </p>
       )}
