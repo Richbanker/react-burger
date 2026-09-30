@@ -64,7 +64,7 @@ const IngredientCard = ({
         {count > 0 && (
           <Counter count={count} size="default" extraClass={styles.counter} />
         )}
-        <img className={styles.image} src={ingredient.image} alt={ingredient.name} />
+        <img className={styles.image} src={ingredient.image} alt="" />
         <p className={`${styles.price} text text_type_digits-default mt-1 mb-1`}>
           {ingredient.price}
           <CurrencyIcon type="primary" />
