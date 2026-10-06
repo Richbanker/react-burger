@@ -203,6 +203,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
   return (
     <section
       ref={constructorRef}
+      aria-label="Конструктор бургера"
       data-testid="burger-constructor"
       className={`${styles.burger_constructor} pt-25`}
     >
