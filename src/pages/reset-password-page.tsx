@@ -65,7 +65,9 @@ export const ResetPasswordPage = (): React.JSX.Element => {
         </Button>
       </form>
 
-      <p className="page_message text text_type_main-default mt-6">{error ?? ''}</p>
+      <p className="page_message text text_type_main-default mt-6" role="alert">
+        {error ?? ''}
+      </p>
 
       <p className="text text_type_main-default text_color_inactive mt-20">
         Вспомнили пароль?{' '}
