@@ -1,4 +1,12 @@
-# Стартер на TypeScript для проекта Stellar Burger
+# Stellar Burgers — конструктор бургеров
+
+[Публичное демо](https://richbanker.github.io/react-burger/) · React, TypeScript, Redux Toolkit, React DnD, WebSocket
+
+Учебный проект с конструктором ингредиентов, публичной лентой заказов, модальными карточками и отдельными маршрутами. Ингредиенты и заказы загружаются из внешнего API. Создание заказа требует авторизации; при проверке демо оплату выполнять не нужно.
+
+Архитектура: состояние ингредиентов, конструктора и заказов хранится в отдельных Redux-срезах; асинхронные запросы и WebSocket-подключения вынесены в сервисы. Маршруты размещены после `#`, чтобы прямая ссылка и перезагрузка работали на GitHub Pages с HTTP 200.
+
+Локально: `npm ci`, `npm run dev`. Проверки: `npm run check`, `npm run build`, `npm test -- --run`, `npm run e2e`.
 
 [![Просмотры README](https://vbr.nathanchung.dev/badge?page_id=Richbanker.react-burger&text=README_Views)](https://github.com/Richbanker/react-burger)
 
